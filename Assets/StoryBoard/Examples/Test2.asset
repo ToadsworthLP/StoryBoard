@@ -1,0 +1,360 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39b929387b9f9b04db19bda82880ffe7, type: 3}
+  m_Name: Test2
+  m_EditorClassIdentifier: 
+  nodes:
+  - {fileID: 114371859000912794}
+  - {fileID: 114420092811457002}
+  - {fileID: 114892251822550176}
+  - {fileID: 114561705119255098}
+  - {fileID: 114811930084902654}
+  - {fileID: 114468115642587688}
+  - {fileID: 0}
+  - {fileID: 114097737708551836}
+--- !u!114 &114097737708551836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 545806ab2a25e5347aed0ccedd5f2b3c, type: 3}
+  m_Name: Scene Method Call Node
+  m_EditorClassIdentifier: 
+  graph: {fileID: 11400000}
+  position: {x: 184, y: 8}
+  ports:
+    keys:
+    - Previous
+    - Next
+    - Target
+    - value
+    values:
+    - _fieldName: Previous
+      _node: {fileID: 114097737708551836}
+      _typeQualifiedName: StoryBoard.Flow, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections:
+      - fieldName: Next
+        node: {fileID: 114371859000912794}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _dynamic: 0
+    - _fieldName: Next
+      _node: {fileID: 114097737708551836}
+      _typeQualifiedName: StoryBoard.Flow, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections:
+      - fieldName: Previous
+        node: {fileID: 114811930084902654}
+        reroutePoints: []
+      _direction: 1
+      _connectionType: 0
+      _dynamic: 0
+    - _fieldName: Target
+      _node: {fileID: 114097737708551836}
+      _typeQualifiedName: StoryBoard.Nodes.SceneObject, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: Object
+        node: {fileID: 114420092811457002}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _dynamic: 0
+    - _fieldName: value
+      _node: {fileID: 114097737708551836}
+      _typeQualifiedName: UnityEngine.Color, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: value
+        node: {fileID: 114892251822550176}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 1
+      _dynamic: 1
+  Target:
+    typeName: UnityEngine.SpriteRenderer, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  methodName: set_color
+  methodArgs:
+  - argumentName: value
+    boolValue: 0
+    intValue: 0
+    floatValue: 0
+    stringValue: 
+    colorValue: {r: 1, g: 0, b: 0, a: 1}
+    vector2Value: {x: 0, y: 0}
+    vector3Value: {x: 0, y: 0, z: 0}
+    objectValue: {fileID: 0}
+    valueTypeName: UnityEngine.Color, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+    argType: 5
+--- !u!114 &114371859000912794
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 019acf11b53b7504c878c816247dcd73, type: 3}
+  m_Name: Root Node
+  m_EditorClassIdentifier: 
+  graph: {fileID: 11400000}
+  position: {x: -136, y: -24}
+  ports:
+    keys:
+    - Next
+    values:
+    - _fieldName: Next
+      _node: {fileID: 114371859000912794}
+      _typeQualifiedName: StoryBoard.Flow, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections:
+      - fieldName: Previous
+        node: {fileID: 114097737708551836}
+        reroutePoints: []
+      _direction: 1
+      _connectionType: 0
+      _dynamic: 0
+--- !u!114 &114420092811457002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf3489e3ca11b964d883e23057ee7acc, type: 3}
+  m_Name: SpriteRenderer10848
+  m_EditorClassIdentifier: 
+  graph: {fileID: 11400000}
+  position: {x: -136, y: 72}
+  ports:
+    keys:
+    - Object
+    values:
+    - _fieldName: Object
+      _node: {fileID: 114420092811457002}
+      _typeQualifiedName: StoryBoard.Nodes.SceneObject, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: Target
+        node: {fileID: 114097737708551836}
+        reroutePoints: []
+      _direction: 1
+      _connectionType: 0
+      _dynamic: 0
+  Object:
+    typeName: UnityEngine.SpriteRenderer, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+--- !u!114 &114468115642587688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06d2b7865f867184ca1e1eb8daef55be, type: 3}
+  m_Name: Vector310852
+  m_EditorClassIdentifier: 
+  graph: {fileID: 11400000}
+  position: {x: 232, y: 344}
+  ports:
+    keys:
+    - value
+    values:
+    - _fieldName: value
+      _node: {fileID: 114468115642587688}
+      _typeQualifiedName: UnityEngine.Vector3, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: worldPosition
+        node: {fileID: 114811930084902654}
+        reroutePoints: []
+      _direction: 1
+      _connectionType: 0
+      _dynamic: 0
+  value: {x: 2, y: 5, z: 2}
+--- !u!114 &114561705119255098
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf3489e3ca11b964d883e23057ee7acc, type: 3}
+  m_Name: Transform-238368
+  m_EditorClassIdentifier: 
+  graph: {fileID: 11400000}
+  position: {x: 232, y: 200}
+  ports:
+    keys:
+    - Object
+    values:
+    - _fieldName: Object
+      _node: {fileID: 114561705119255098}
+      _typeQualifiedName: StoryBoard.Nodes.SceneObject, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: Target
+        node: {fileID: 114811930084902654}
+        reroutePoints: []
+      _direction: 1
+      _connectionType: 0
+      _dynamic: 0
+  Object:
+    typeName: UnityEngine.Transform, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+--- !u!114 &114761830346899838
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f40cce5aff092eb48ba269731398e52f, type: 3}
+  m_Name: Exposed Color Node
+  m_EditorClassIdentifier: 
+  graph: {fileID: 11400000}
+  position: {x: -152, y: 104}
+  ports:
+    keys:
+    - value
+    values:
+    - _fieldName: value
+      _node: {fileID: 114761830346899838}
+      _typeQualifiedName: UnityEngine.Color, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      connections: []
+      _direction: 1
+      _connectionType: 0
+      _dynamic: 0
+  storyboard: {fileID: 0}
+  value:
+    r: 1
+    g: 0.7052167
+    b: 0
+    a: 1
+--- !u!114 &114811930084902654
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 545806ab2a25e5347aed0ccedd5f2b3c, type: 3}
+  m_Name: Scene Method Call Node
+  m_EditorClassIdentifier: 
+  graph: {fileID: 11400000}
+  position: {x: 552, y: 136}
+  ports:
+    keys:
+    - Previous
+    - Next
+    - Target
+    - worldPosition
+    values:
+    - _fieldName: Previous
+      _node: {fileID: 114811930084902654}
+      _typeQualifiedName: StoryBoard.Flow, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections:
+      - fieldName: Next
+        node: {fileID: 114097737708551836}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _dynamic: 0
+    - _fieldName: Next
+      _node: {fileID: 114811930084902654}
+      _typeQualifiedName: StoryBoard.Flow, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections: []
+      _direction: 1
+      _connectionType: 0
+      _dynamic: 0
+    - _fieldName: Target
+      _node: {fileID: 114811930084902654}
+      _typeQualifiedName: StoryBoard.Nodes.SceneObject, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: Object
+        node: {fileID: 114561705119255098}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _dynamic: 0
+    - _fieldName: worldPosition
+      _node: {fileID: 114811930084902654}
+      _typeQualifiedName: UnityEngine.Vector3, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: value
+        node: {fileID: 114468115642587688}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 1
+      _dynamic: 1
+  Target:
+    typeName: UnityEngine.Transform, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  methodName: LookAt
+  methodArgs:
+  - argumentName: worldPosition
+    boolValue: 0
+    intValue: 0
+    floatValue: 0
+    stringValue: 
+    colorValue: {r: 0, g: 0, b: 0, a: 0}
+    vector2Value: {x: 0, y: 0}
+    vector3Value: {x: 0, y: 0, z: 0}
+    objectValue: {fileID: 0}
+    valueTypeName: UnityEngine.Vector3, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+    argType: 7
+--- !u!114 &114892251822550176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8cd99d84289c73d48b6aacb2cbbe6b37, type: 3}
+  m_Name: Color-157592
+  m_EditorClassIdentifier: 
+  graph: {fileID: 11400000}
+  position: {x: -136, y: 200}
+  ports:
+    keys:
+    - value
+    values:
+    - _fieldName: value
+      _node: {fileID: 114892251822550176}
+      _typeQualifiedName: UnityEngine.Color, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      connections:
+      - fieldName: value
+        node: {fileID: 114097737708551836}
+        reroutePoints: []
+      _direction: 1
+      _connectionType: 0
+      _dynamic: 0
+  value: {r: 1, g: 0.76711166, b: 0, a: 1}
