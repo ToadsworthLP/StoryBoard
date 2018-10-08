@@ -29,12 +29,6 @@ namespace StoryBoard {
         public void ForcePlay() { Play(); }
 
         public void Play(Action<object> OnFinished = null) {
-            List<SceneObjectNode> sceneObjectNodes = GetSceneObjectNodes();
-            foreach (SceneObjectNode node in sceneObjectNodes) {
-                UnityEngine.Object obj = sceneObjects[Array.IndexOf(sceneObjectNodeNames, node.name)];
-                node.Object.SetObject(obj);
-            }
-
             List<ExposedPropertyBase> exposedPropertyNodes = GetExposedPropertyNodes();
             foreach (ExposedPropertyBase node in exposedPropertyNodes) {
                 SerializabeArgs args = exposedProperties[Array.IndexOf(exposedPropertyNodeNames, node.name)];
@@ -42,10 +36,6 @@ namespace StoryBoard {
             }
 
             storyboard.Play(OnFinished);
-        }
-
-        public List<SceneObjectNode> GetSceneObjectNodes() {
-            return storyboard.nodes.FindAll(node => node is SceneObjectNode).ConvertAll(node => (SceneObjectNode)node);
         }
 
         public List<ExposedPropertyBase> GetExposedPropertyNodes() {

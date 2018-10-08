@@ -73,7 +73,7 @@ namespace StoryBoard.Misc {
         }
 
 #if UNITY_EDITOR
-        public void DrawEditor() {
+        public void DrawEditor(bool allowSceneObjects) {
             switch (argType) {
                 case ArgType.Bool:
                     boolValue = EditorGUILayout.Toggle(boolValue);
@@ -97,7 +97,7 @@ namespace StoryBoard.Misc {
                     vector3Value = EditorGUILayout.Vector3Field("", vector3Value);
                     break;
                 case ArgType.Object:
-                    objectValue = EditorGUILayout.ObjectField(objectValue, Type.GetType(valueTypeName), allowSceneObjects: false);
+                    objectValue = EditorGUILayout.ObjectField(objectValue, Type.GetType(valueTypeName), allowSceneObjects: allowSceneObjects);
                     break;
             }
         }
