@@ -16,6 +16,8 @@ namespace StoryBoard.Nodes {
         [HideInInspector]
         public SerializabeArgs[] methodArgs;
 
+        private object cachedReturn;
+
         protected override void Init() {
             base.Init();
             
@@ -27,7 +29,7 @@ namespace StoryBoard.Nodes {
 
             object target = GetInputValue<object>("Target", null);
             if (target != null && method.IsInitialized()) {
-                InvokeTargetMethod(target);
+                cachedReturn = InvokeTargetMethod(target);
             } else {
                 Debug.LogWarning("No object was provided to call a function on in node " + name + ". Skipping!");
             }
@@ -36,17 +38,30 @@ namespace StoryBoard.Nodes {
         }
 
         public override object GetValue(NodePort port) {
-            return Next;
+            if (port.fieldName == "Next") {
+                return Next;
+            } else if (port.fieldName == "Return" && method.ReturnType != typeof(void)) {
+                object target = GetInputValue<object>("Target", null);
+                if (target != null && method.IsInitialized()) {
+                    if(cachedReturn == null) cachedReturn = InvokeTargetMethod(target);
+                    return cachedReturn;
+                } else {
+                    Debug.LogWarning("No object was provided to call a function on in node " + name + ". Returning null!");
+                    return null;
+                }
+            }
+
+            return null;
         }
 
-        private void InvokeTargetMethod(object target) {
+        private object InvokeTargetMethod(object target) {
             object[] args = new object[methodArgs.Length];
             for (int i = 0; i < methodArgs.Length; i++) {
                 args[i] = GetInputValue(methodArgs[i].argumentName, methodArgs[i].GetValue());
             }
 
             MethodInfo methodInfo = method.Method;
-            methodInfo.Invoke(target, args);
+            return methodInfo.Invoke(target, args);
         }
 
     }
@@ -58,15 +73,19 @@ namespace StoryBoard.Nodes {
         [SerializeField]
         private string methodName;
         [SerializeField]
+        private string returnTypeName;
+        [SerializeField]
         private string[] argTypeNames;
 
         private Type declaringType;
+        private Type returnType;
         private Type[] argTypes;
         private MethodInfo method;
 
         public SerializableMethodInfo() {
             declaringTypeName = "";
             methodName = "";
+            returnTypeName = "";
             argTypeNames = new string[0];
         }
 
@@ -74,12 +93,14 @@ namespace StoryBoard.Nodes {
             if (method == null) {
                 declaringTypeName = "";
                 methodName = "";
+                returnTypeName = "";
                 argTypeNames = new string[0];
                 return;
             }
 
             declaringTypeName = method.DeclaringType.AssemblyQualifiedName;
             methodName = method.Name;
+            returnTypeName = method.ReturnType.AssemblyQualifiedName;
             argTypeNames = Array.ConvertAll(method.GetParameters(), param => param.ParameterType.AssemblyQualifiedName);
         }
 
@@ -94,7 +115,10 @@ namespace StoryBoard.Nodes {
 
         public Type[] ArgTypes {
             get { if (argTypes == null) { argTypes = Array.ConvertAll(argTypeNames, name => Type.GetType(name)); } return argTypes; }
-            set { argTypes = value; argTypeNames = Array.ConvertAll(argTypes, type => type.AssemblyQualifiedName); method = null; }
+        }
+
+        public Type ReturnType {
+            get { if (returnType == null) { returnType = Type.GetType(returnTypeName); } return returnType; }
         }
 
         public MethodInfo Method {

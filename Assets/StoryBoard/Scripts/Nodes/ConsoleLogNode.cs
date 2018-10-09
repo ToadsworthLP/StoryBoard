@@ -9,11 +9,11 @@ namespace StoryBoard.Nodes {
         [Output] public Flow Next;
 
         [TextArea]
-        public string message;
+        [Input] public string Message;
 
         public override void OnEnter() {
             base.OnEnter();
-            Debug.Log(message);
+            Debug.Log(GetInputValue("Message", Message));
             Proceed("Next");
         }
 

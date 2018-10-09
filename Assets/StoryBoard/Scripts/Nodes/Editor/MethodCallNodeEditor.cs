@@ -49,7 +49,7 @@ namespace StoryBoardEditor {
 
             if (node.method.Method == null) return;
 
-            DrawTargetInputPort();
+            DrawInstancePorts();
 
             if (node.methodArgs == null) return;
 
@@ -105,8 +105,12 @@ namespace StoryBoardEditor {
             return children.ToArray();
         }
 
-        private void DrawTargetInputPort() {
-            NodeEditorGUILayout.PortField(new GUIContent("Target"), node.GetInputPort("Target"));
+        private void DrawInstancePorts() {
+            if(node.method.ReturnType == typeof(void)) {
+                NodeEditorGUILayout.PortField(new GUIContent("Target"), node.GetInputPort("Target"));
+            } else {
+                NodeEditorGUILayout.PortPair(node.GetInputPort("Target"), node.GetOutputPort("Return"));
+            }
         }
 
         private void ShowMethodSelectMenu() {
@@ -117,7 +121,6 @@ namespace StoryBoardEditor {
 
             foreach (MethodInfo method in methods) {
                 if (method.IsGenericMethod) continue;
-                if (method.ReturnType != typeof(void)) continue;
                 if (!method.Name.StartsWith(searchString)) continue;
 
                 ParameterInfo[] parameters = method.GetParameters();
@@ -153,6 +156,10 @@ namespace StoryBoardEditor {
 
             node.ClearInstancePorts();
             node.AddInstanceInput(node.method.DeclaringType, Node.ConnectionType.Override, "Target");
+
+            if(node.method.ReturnType != typeof(void)) {
+                node.AddInstanceOutput(node.method.ReturnType, Node.ConnectionType.Override, "Return");
+            }
 
             for (int i = 0; i < parameters.Length; i++) {
                 SerializabeArgs args = new SerializabeArgs();
