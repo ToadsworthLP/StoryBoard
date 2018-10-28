@@ -39,7 +39,7 @@ namespace StoryBoard.Nodes {
 
         public override object GetValue(NodePort port) {
             if (port.fieldName == "Next") {
-                return Next;
+                return Previous;
             } else if (port.fieldName == "Return" && method.ReturnType != typeof(void)) {
                 object target = GetInputValue<object>("Target", null);
                 if (target != null && method.IsInitialized()) {

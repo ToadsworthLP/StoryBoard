@@ -19,7 +19,7 @@ namespace StoryBoard.Misc {
         public Vector2 vector2Value;
         public Vector3 vector3Value;
         public UnityEngine.Object objectValue;
-        public string valueTypeName;
+        public string objectTypeName;
         public ArgType argType;
 
         public object GetValue() {
@@ -66,7 +66,7 @@ namespace StoryBoard.Misc {
                 case ArgType.Vector3:
                     return typeof(Vector3);
                 case ArgType.Object:
-                    return Type.GetType(valueTypeName);
+                    return Type.GetType(objectTypeName);
                 default:
                     return null;
             }
@@ -97,7 +97,7 @@ namespace StoryBoard.Misc {
                     vector3Value = EditorGUILayout.Vector3Field("", vector3Value);
                     break;
                 case ArgType.Object:
-                    objectValue = EditorGUILayout.ObjectField(objectValue, Type.GetType(valueTypeName), allowSceneObjects: allowSceneObjects);
+                    objectValue = EditorGUILayout.ObjectField(objectValue, Type.GetType(objectTypeName), allowSceneObjects: allowSceneObjects);
                     break;
             }
         }

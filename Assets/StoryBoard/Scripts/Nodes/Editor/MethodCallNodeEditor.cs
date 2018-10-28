@@ -165,7 +165,7 @@ namespace StoryBoardEditor {
                 SerializabeArgs args = new SerializabeArgs();
                 args.argumentName = parameters[i].Name;
                 args.argType = SerializabeArgs.ArgTypeOfType(parameters[i].ParameterType);
-                args.valueTypeName = parameters[i].ParameterType.AssemblyQualifiedName;
+                args.objectTypeName = parameters[i].ParameterType.AssemblyQualifiedName;
                 node.methodArgs[i] = args;
 
                 node.AddInstanceInput(parameters[i].ParameterType, Node.ConnectionType.Override, parameters[i].Name);

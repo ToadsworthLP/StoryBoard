@@ -9,7 +9,7 @@ namespace StoryBoard.Nodes {
         public abstract Type GetPropertyType();
         public abstract void SetValue(object value);
 
-        [ContextMenu("Reset Name")]
+        [ContextMenu("Generate Name")]
         public void ResetName() {
             name = GetPropertyType().Name + GetInstanceID();
         }

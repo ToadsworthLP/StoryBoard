@@ -3,18 +3,19 @@ using XNode;
 
 namespace StoryBoard.Nodes {
 
-    public class ConsoleLogNode : StoryboardNode {
+    [CreateNodeMenu("Flow Control/If")]
+    public class IfNode : StoryboardNode {
 
         [Input] public Flow Previous;
-        [Output] public Flow Next;
 
-        [TextArea]
-        [Input] public string Message;
+        [Output] public Flow True;
+        [Output] public Flow False;
+
+        [Input] public bool condition;
 
         public override void OnEnter() {
             base.OnEnter();
-            Debug.Log(GetInputValue("Message", Message));
-            Proceed("Next");
+            if (GetInputValue<bool>("condition")) { Proceed("True"); } else { Proceed("False"); }
         }
 
         public override object GetValue(NodePort port) {

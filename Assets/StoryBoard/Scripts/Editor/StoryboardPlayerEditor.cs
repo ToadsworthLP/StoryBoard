@@ -71,7 +71,7 @@ namespace StoryBoardEditor {
                 ExposedPropertyBase node = exposedPropertyNodes[i];
                 player.exposedProperties[i] = new SerializabeArgs();
                 player.exposedProperties[i].argType = SerializabeArgs.ArgTypeOfType(node.GetPropertyType());
-                player.exposedProperties[i].valueTypeName = node.GetPropertyType().AssemblyQualifiedName;
+                player.exposedProperties[i].objectTypeName = node.GetPropertyType().AssemblyQualifiedName;
 
                 if (!oldNodeNames.Contains(node.name)) continue;
 

@@ -339,6 +339,75 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1643600865
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1643600867}
+  - component: {fileID: 1643600866}
+  m_Layer: 0
+  m_Name: LogicTestPlayer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1643600866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1643600865}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a5e83f8af7017647952690c0aaba217, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  storyboard: {fileID: 11400000, guid: 8d6817d54b6d6364cb4fcbf493d82fa8, type: 2}
+  sceneObjectNodeNames: []
+  sceneObjects: []
+  exposedPropertyNodeNames:
+  - a
+  - b
+  exposedProperties:
+  - argumentName: 
+    boolValue: 0
+    intValue: 0
+    floatValue: 0
+    stringValue: 
+    colorValue: {r: 0, g: 0, b: 0, a: 0}
+    vector2Value: {x: 0, y: 0}
+    vector3Value: {x: 0, y: 0, z: 0}
+    objectValue: {fileID: 0}
+    objectTypeName: System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+    argType: 1
+  - argumentName: 
+    boolValue: 0
+    intValue: 0
+    floatValue: 0
+    stringValue: 
+    colorValue: {r: 0, g: 0, b: 0, a: 0}
+    vector2Value: {x: 0, y: 0}
+    vector3Value: {x: 0, y: 0, z: 0}
+    objectValue: {fileID: 0}
+    objectTypeName: System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+    argType: 1
+--- !u!4 &1643600867
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1643600865}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.53, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1866822146
 GameObject:
   m_ObjectHideFlags: 0
@@ -384,8 +453,7 @@ MonoBehaviour:
     vector2Value: {x: 0, y: 0}
     vector3Value: {x: 0, y: 0, z: 0}
     objectValue: {fileID: 505428754}
-    valueTypeName: UnityEngine.Transform, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
+    objectTypeName: 
     argType: 8
   - argumentName: 
     boolValue: 0
@@ -396,8 +464,7 @@ MonoBehaviour:
     vector2Value: {x: 0, y: 0}
     vector3Value: {x: 0, y: 5, z: 0}
     objectValue: {fileID: 0}
-    valueTypeName: UnityEngine.Vector3, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
+    objectTypeName: 
     argType: 7
   - argumentName: 
     boolValue: 0
@@ -408,7 +475,7 @@ MonoBehaviour:
     vector2Value: {x: 0, y: 0}
     vector3Value: {x: 0, y: 0, z: 0}
     objectValue: {fileID: 0}
-    valueTypeName: System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+    objectTypeName: 
     argType: 4
   - argumentName: 
     boolValue: 0
@@ -419,8 +486,7 @@ MonoBehaviour:
     vector2Value: {x: 0, y: 0}
     vector3Value: {x: 0, y: 0, z: 0}
     objectValue: {fileID: 1413402071}
-    valueTypeName: UnityEngine.Transform, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
+    objectTypeName: 
     argType: 8
 --- !u!4 &1866822148
 Transform:
