@@ -46,7 +46,9 @@ namespace StoryBoard.Nodes {
                     if(cachedReturn == null) cachedReturn = InvokeTargetMethod(target);
                     return cachedReturn;
                 } else {
+#if !UNITY_EDITOR
                     Debug.LogWarning("No object was provided to call a function on in node " + name + ". Returning null!");
+#endif
                     return null;
                 }
             }

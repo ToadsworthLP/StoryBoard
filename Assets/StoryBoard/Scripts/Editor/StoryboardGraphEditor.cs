@@ -1,4 +1,5 @@
 ﻿using StoryBoard;
+using System;
 using UnityEngine;
 using XNodeEditor;
 
@@ -25,9 +26,19 @@ namespace StoryBoardEditor {
             }
 
             if(storyboard.RootNode == null) {
-                Rect noRootWarningRect = new Rect(10, position.height - 25, 50, 10);
+                Rect noRootWarningRect = new Rect(10, window.position.height - 25, 50, 10);
                 GUI.Label(noRootWarningRect, NO_ROOT_ERROR, StoryboardResources.WarningLabel());
             }
+        }
+
+        //Since values are usually supplied at runtime, it doesn't make a lot of sense to show the null values in the editor. The type is shown instead.
+        public override string GetPortTooltip(XNode.NodePort port)
+        {
+            Type portType = port.ValueType;
+            string tooltip = "";
+            tooltip = portType.PrettyName();
+
+            return tooltip;
         }
 
     }

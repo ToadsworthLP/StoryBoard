@@ -2,17 +2,20 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace XNodeEditor {
+    public enum NoodlePath { Curvy, Straight, Angled, ShaderLab }
+    public enum NoodleStroke { Full, Dashed }
+
     public static class NodeEditorPreferences {
-        public enum NoodleType { Curve, Line, Angled }
 
         /// <summary> The last editor we checked. This should be the one we modify </summary>
         private static XNodeEditor.NodeGraphEditor lastEditor;
         /// <summary> The last key we checked. This should be the one we modify </summary>
         private static string lastKey = "xNode.Settings";
 
-        private static Dictionary<string, Color> typeColors = new Dictionary<string, Color>();
+        private static Dictionary<Type, Color> typeColors = new Dictionary<Type, Color>();
         private static Dictionary<string, Settings> settings = new Dictionary<string, Settings>();
 
         [System.Serializable]
@@ -23,12 +26,22 @@ namespace XNodeEditor {
             [SerializeField] private Color32 _gridBgColor = new Color(0.18f, 0.18f, 0.18f);
             public Color32 gridBgColor { get { return _gridBgColor; } set { _gridBgColor = value; _gridTexture = null; } }
 
+            [Obsolete("Use maxZoom instead")]
+            public float zoomOutLimit { get { return maxZoom; } set { maxZoom = value; } }
+
+            [UnityEngine.Serialization.FormerlySerializedAs("zoomOutLimit")]
+            public float maxZoom = 5f;
+            public float minZoom = 1f;
             public Color32 highlightColor = new Color32(255, 255, 255, 255);
             public bool gridSnap = true;
             public bool autoSave = true;
+            public bool dragToCreate = true;
+            public bool zoomToMouse = true;
+            public bool portTooltips = true;
             [SerializeField] private string typeColorsData = "";
             [NonSerialized] public Dictionary<string, Color> typeColors = new Dictionary<string, Color>();
-            public NoodleType noodleType = NoodleType.Curve;
+            [FormerlySerializedAs("noodleType")] public NoodlePath noodlePath = NoodlePath.Curvy;
+            public NoodleStroke noodleStroke = NoodleStroke.Full;
 
             private Texture2D _gridTexture;
             public Texture2D gridTexture {
@@ -68,6 +81,8 @@ namespace XNodeEditor {
 
         /// <summary> Get settings of current active editor </summary>
         public static Settings GetSettings() {
+            if (XNodeEditor.NodeEditorWindow.current == null) return new Settings();
+
             if (lastEditor != XNodeEditor.NodeEditorWindow.current.graphEditor) {
                 object[] attribs = XNodeEditor.NodeEditorWindow.current.graphEditor.GetType().GetCustomAttributes(typeof(XNodeEditor.NodeGraphEditor.CustomNodeGraphEditorAttribute), true);
                 if (attribs.Length == 1) {
@@ -80,10 +95,26 @@ namespace XNodeEditor {
             return settings[lastKey];
         }
 
+#if UNITY_2019_1_OR_NEWER
+        [SettingsProvider]
+        public static SettingsProvider CreateXNodeSettingsProvider() {
+            SettingsProvider provider = new SettingsProvider("Preferences/Node Editor", SettingsScope.User) {
+                guiHandler = (searchContext) => { XNodeEditor.NodeEditorPreferences.PreferencesGUI(); },
+                keywords = new HashSet<string>(new [] { "xNode", "node", "editor", "graph", "connections", "noodles", "ports" })
+            };
+            return provider;
+        }
+#endif
+
+#if !UNITY_2019_1_OR_NEWER
         [PreferenceItem("Node Editor")]
+#endif
         private static void PreferencesGUI() {
             VerifyLoaded();
             Settings settings = NodeEditorPreferences.settings[lastKey];
+
+            if (GUILayout.Button(new GUIContent("Documentation", "https://github.com/Siccity/xNode/wiki"), GUILayout.Width(100))) Application.OpenURL("https://github.com/Siccity/xNode/wiki");
+            EditorGUILayout.Space();
 
             NodeSettingsGUI(lastKey, settings);
             GridSettingsGUI(lastKey, settings);
@@ -98,7 +129,12 @@ namespace XNodeEditor {
             //Label
             EditorGUILayout.LabelField("Grid", EditorStyles.boldLabel);
             settings.gridSnap = EditorGUILayout.Toggle(new GUIContent("Snap", "Hold CTRL in editor to invert"), settings.gridSnap);
-
+            settings.zoomToMouse = EditorGUILayout.Toggle(new GUIContent("Zoom to Mouse", "Zooms towards mouse position"), settings.zoomToMouse);
+            EditorGUILayout.LabelField("Zoom");
+            EditorGUI.indentLevel++;
+            settings.maxZoom = EditorGUILayout.FloatField(new GUIContent("Max", "Upper limit to zoom"), settings.maxZoom);
+            settings.minZoom = EditorGUILayout.FloatField(new GUIContent("Min", "Lower limit to zoom"), settings.minZoom);
+            EditorGUI.indentLevel--;
             settings.gridLineColor = EditorGUILayout.ColorField("Color", settings.gridLineColor);
             settings.gridBgColor = EditorGUILayout.ColorField(" ", settings.gridBgColor);
             if (GUI.changed) {
@@ -121,7 +157,10 @@ namespace XNodeEditor {
             //Label
             EditorGUILayout.LabelField("Node", EditorStyles.boldLabel);
             settings.highlightColor = EditorGUILayout.ColorField("Selection", settings.highlightColor);
-            settings.noodleType = (NoodleType) EditorGUILayout.EnumPopup("Noodle type", (Enum) settings.noodleType);
+            settings.noodlePath = (NoodlePath) EditorGUILayout.EnumPopup("Noodle path", (Enum) settings.noodlePath);
+            settings.noodleStroke = (NoodleStroke) EditorGUILayout.EnumPopup("Noodle stroke", (Enum) settings.noodleStroke);
+            settings.portTooltips = EditorGUILayout.Toggle("Port Tooltips", settings.portTooltips);
+            settings.dragToCreate = EditorGUILayout.Toggle(new GUIContent("Drag to Create", "Drag a port connection anywhere on the grid to create and connect a node"), settings.dragToCreate);
             if (GUI.changed) {
                 SavePrefs(key, settings);
                 NodeEditorWindow.RepaintAll();
@@ -133,19 +172,22 @@ namespace XNodeEditor {
             //Label
             EditorGUILayout.LabelField("Types", EditorStyles.boldLabel);
 
+            //Clone keys so we can enumerate the dictionary and make changes.
+            var typeColorKeys = new List<Type>(typeColors.Keys);
+
             //Display type colors. Save them if they are edited by the user
-            List<string> typeColorKeys = new List<string>(typeColors.Keys);
-            foreach (string typeColorKey in typeColorKeys) {
-                Color col = typeColors[typeColorKey];
+            foreach (var type in typeColorKeys) {
+                string typeColorKey = NodeEditorUtilities.PrettyName(type);
+                Color col = typeColors[type];
                 EditorGUI.BeginChangeCheck();
                 EditorGUILayout.BeginHorizontal();
                 col = EditorGUILayout.ColorField(typeColorKey, col);
                 EditorGUILayout.EndHorizontal();
                 if (EditorGUI.EndChangeCheck()) {
-                    typeColors[typeColorKey] = col;
+                    typeColors[type] = col;
                     if (settings.typeColors.ContainsKey(typeColorKey)) settings.typeColors[typeColorKey] = col;
                     else settings.typeColors.Add(typeColorKey, col);
-                    SavePrefs(typeColorKey, settings);
+                    SavePrefs(key, settings);
                     NodeEditorWindow.RepaintAll();
                 }
             }
@@ -165,7 +207,7 @@ namespace XNodeEditor {
         public static void ResetPrefs() {
             if (EditorPrefs.HasKey(lastKey)) EditorPrefs.DeleteKey(lastKey);
             if (settings.ContainsKey(lastKey)) settings.Remove(lastKey);
-            typeColors = new Dictionary<string, Color>();
+            typeColors = new Dictionary<Type, Color>();
             VerifyLoaded();
             NodeEditorWindow.RepaintAll();
         }
@@ -184,19 +226,28 @@ namespace XNodeEditor {
         public static Color GetTypeColor(System.Type type) {
             VerifyLoaded();
             if (type == null) return Color.gray;
-            string typeName = type.PrettyName();
-            if (!typeColors.ContainsKey(typeName)) {
-                if (settings[lastKey].typeColors.ContainsKey(typeName)) typeColors.Add(typeName, settings[lastKey].typeColors[typeName]);
+            Color col;
+            if (!typeColors.TryGetValue(type, out col)) {
+                string typeName = type.PrettyName();
+                if (settings[lastKey].typeColors.ContainsKey(typeName)) typeColors.Add(type, settings[lastKey].typeColors[typeName]);
                 else {
 #if UNITY_5_4_OR_NEWER
+                    UnityEngine.Random.State oldState = UnityEngine.Random.state;
                     UnityEngine.Random.InitState(typeName.GetHashCode());
 #else
+                    int oldSeed = UnityEngine.Random.seed;
                     UnityEngine.Random.seed = typeName.GetHashCode();
 #endif
-                    typeColors.Add(typeName, new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value));
+                    col = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
+                    typeColors.Add(type, col);
+#if UNITY_5_4_OR_NEWER
+                    UnityEngine.Random.state = oldState;
+#else
+                    UnityEngine.Random.seed = oldSeed;
+#endif
                 }
             }
-            return typeColors[typeName];
+            return col;
         }
     }
 }

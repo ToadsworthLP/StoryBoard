@@ -16,7 +16,7 @@ namespace StoryBoardEditor {
 
         private MethodCallNode node;
 
-        private static bool showSearchOptions = false;
+        private bool showSearchOptions = false;
         private static bool hideUnityClasses = true;
         private static string searchString = "";
 
@@ -49,11 +49,11 @@ namespace StoryBoardEditor {
 
             if (node.method.Method == null) return;
 
-            DrawInstancePorts();
+            //DrawInstanceDynamicPorts();
 
             if (node.methodArgs == null) return;
 
-            DrawParameterSection();
+            //DrawParameterSection();
         }
 
         private void ShowTypeSelectMenu() {
@@ -77,8 +77,8 @@ namespace StoryBoardEditor {
             node.methodArgs = null;
             node.method.DeclaringType = type;
 
-            node.ClearInstancePorts();
-            node.AddInstanceInput(node.method.DeclaringType, Node.ConnectionType.Override, "Target");
+            node.ClearDynamicPorts();
+            node.AddDynamicInput(node.method.DeclaringType, Node.ConnectionType.Override, fieldName: "Target");
             serializedObject.ApplyModifiedProperties();
         }
 
@@ -105,7 +105,8 @@ namespace StoryBoardEditor {
             return children.ToArray();
         }
 
-        private void DrawInstancePorts() {
+        //No longer neccessary since xNode does this automaticall now
+        private void DrawInstanceDynamicPorts() {
             if(node.method.ReturnType == typeof(void)) {
                 NodeEditorGUILayout.PortField(new GUIContent("Target"), node.GetInputPort("Target"));
             } else {
@@ -154,11 +155,11 @@ namespace StoryBoardEditor {
 
             node.method = new SerializableMethodInfo(method);
 
-            node.ClearInstancePorts();
-            node.AddInstanceInput(node.method.DeclaringType, Node.ConnectionType.Override, "Target");
+            node.ClearDynamicPorts();
+            node.AddDynamicInput(node.method.DeclaringType, Node.ConnectionType.Override, fieldName: "Target");
 
             if(node.method.ReturnType != typeof(void)) {
-                node.AddInstanceOutput(node.method.ReturnType, Node.ConnectionType.Override, "Return");
+                node.AddDynamicOutput(node.method.ReturnType, Node.ConnectionType.Override, fieldName: "Return");
             }
 
             for (int i = 0; i < parameters.Length; i++) {
@@ -168,7 +169,7 @@ namespace StoryBoardEditor {
                 args.objectTypeName = parameters[i].ParameterType.AssemblyQualifiedName;
                 node.methodArgs[i] = args;
 
-                node.AddInstanceInput(parameters[i].ParameterType, Node.ConnectionType.Override, parameters[i].Name);
+                node.AddDynamicInput(parameters[i].ParameterType, Node.ConnectionType.Override, fieldName: parameters[i].Name);
             }
 
             serializedObject.ApplyModifiedProperties();
